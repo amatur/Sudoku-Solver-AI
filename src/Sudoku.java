@@ -36,6 +36,39 @@ public class Sudoku {
     public int getPos(int row, int col) {
         return row * N + col;
     }
+    
+    public HashSet<Integer> getPeers(int pos) {
+        VariableCell c = getCell(pos);
+        HashSet<Integer> unassignedNeighbours = new HashSet<>();
+
+        //look for unassigned neighbours in same column
+        for (int i = 0; i < Sudoku.N; i++) {
+            if (board[i][c.col] == 0 && i != c.row) {
+                unassignedNeighbours.add(getPos(i, c.col));
+            }
+        }
+
+        //look for unassigned neighbours in same row
+        for (int j = 0; j < Sudoku.N; j++) {
+            if (board[c.row][j] == 0 && j != c.col) {
+                unassignedNeighbours.add(getPos(c.row, j));
+            }
+        }
+
+        //look for unassigned neighbours in same box
+        VariableCell startCell = getGridStartCell(pos);
+        int startRow = startCell.row;
+        int startCol = startCell.col;
+        for (int i = 0; i < Sudoku.NROOT; i++) {
+            for (int j = 0; j < Sudoku.NROOT; j++) {
+                if (board[startRow + i][startCol + j] == 0 && (i + startRow) != c.row && (j + startCol) != c.col) {
+                    unassignedNeighbours.add(getPos(startRow + i, startCol + j));
+                }
+            }
+        }
+        return unassignedNeighbours;
+
+    }
 
     public int getPos(VariableCell c) {
         return c.row * N + c.col;
