@@ -23,7 +23,7 @@ public class ValueSelection {
         int domainValue;
         int count;
 
-        public CountTuple() {
+        public CountTuple(int domainValue, int count) {
             this.domainValue = domainValue;
             this.count = count;
         }
@@ -40,7 +40,7 @@ public class ValueSelection {
     for example, if in our cell we have the possibilities 7 and 9, we check in how many of this cell's peers 7 appears in the domain, 
     and we do the same for 9; the algorithm then chooses the number that least appears in the cell's peers' domain.
     */
-    public static Integer LRV(Sudoku s, int pos){
+    public static ArrayList<Integer> LRV(Sudoku s, int pos){
         PriorityQueue minHeap = new PriorityQueue(10, new MyComparator());
         BitSet bs = s.domains[pos];
         ArrayList<Integer> domains = new ArrayList<>();
@@ -68,33 +68,26 @@ public class ValueSelection {
                 }
             }
             domainsCount.add(i, new Integer(count));
-            minHeap.add(new CountTuple())
+            minHeap.add(new CountTuple(valueExamined, count));
+        }
+       
+        ArrayList<Integer> al = new ArrayList<>();
+        while(!minHeap.isEmpty()){
+            al.add((Integer)minHeap.peek());
+            minHeap.remove();
         }
         
-        int min = 999999;
-        int retValue = -1;
-        for (int i=0; i<domains.size(); i++){
-            if(domainsCount.get(i)<min){
-                min = domainsCount.get(i);
-                retValue = domains.get(i);
-            }
-        }
-        
-        
-        if(retValue==-1){            
-            return null;
-        }
-        return retValue;
+        return al;
     }
     
     public static ArrayList<Integer> randomOrder(Sudoku s, int pos){
         BitSet bs = s.domains[pos];
         ArrayList<Integer> domains = new ArrayList<>();
         // To iterate over the true bits in a BitSet, use the following loop:
-        for (int i = bs.nextSetBit(0); i < Sudoku.N; i = bs.nextSetBit(i+1)) {
-           // operate on index i here
-            domains.add(i+1);
-        }
+        //for (int i = bs.nextSetBit(0); i < Sudoku.N; i = bs.nextSetBit(i+1)) {
+           // /operate on index i here
+           // domains.add(i+1);
+        //}
         Collections.shuffle(domains, new Random());
         return domains;
     }
