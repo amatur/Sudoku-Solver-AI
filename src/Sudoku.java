@@ -109,14 +109,44 @@ public class Sudoku {
         Sudoku newSudoku = new Sudoku(newAssign);
         for(Integer peerPos: peers){
             newSudoku.domains[peerPos].clear(newSudoku.get(pos)-1);
+            if( newSudoku.domains[peerPos].cardinality()==1){
+                VariableCell vc = getCell(peerPos);
+                newSudoku.board[vc.row][vc.col] = newSudoku.domains[peerPos].nextSetBit(0)+1;
+            }
             if( newSudoku.domains[peerPos].cardinality()==0){
                 throw new IllegalStateException("No remaining assignments for variable: ");
             }
+            
         }
         
         return newAssign;
     }
     
+    
+    
+    public void eliminateByFC(){
+        for(int pos = 0; pos<N*N; pos++){
+            if(get(pos)!=0){
+            // Get all the affected constraints
+            HashSet<Integer> peers = getPeers(pos);
+            Assignment newAssign = new Assignment(assignment);
+            Sudoku newSudoku = new Sudoku(newAssign);
+            for(Integer peerPos: peers){
+                newSudoku.domains[peerPos].clear(newSudoku.get(pos)-1);
+                if( newSudoku.domains[peerPos].cardinality()==1){
+                    VariableCell vc = getCell(peerPos);
+                    newSudoku.board[vc.row][vc.col] = newSudoku.domains[peerPos].nextSetBit(0)+1;
+                }
+                if( newSudoku.domains[peerPos].cardinality()==0){
+                    throw new IllegalStateException("No remaining assignments for variable: ");
+                }
+            }
+
+            assignment = newAssign;
+            }
+        }
+        
+    }
     
     
     public boolean consistent(int pos){
@@ -171,10 +201,11 @@ public class Sudoku {
         return getCell(NROOT * N * gridRow + gridCol * NROOT); //0, 3, 6, 27, 30, 33
     }
 
+    
     public static void main(String[] args) {
         Scanner s = null;
         try {
-            s = new Scanner(new File("problem.txt"));
+            s = new Scanner(new File("easy1.txt"));
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -185,18 +216,24 @@ public class Sudoku {
             }
         }
         Sudoku sudoku = new Sudoku(board);
+       sudoku.eliminateByFC();
        System.out.println("Original Problem: ");
        sudoku.assignment.print();
+        sudoku.assignment.printDomains();
         
          Assignment solution =  Backtrack.startSolve(sudoku);
          if (solution == null) {
             System.out.println("Failed to find a solution!");
-            System.exit(1);
          }else{
              System.out.println("Solution:");
              solution.print();
              solution.printDomains();
          }
+         System.out.println("Count of variable choice: " + sudoku.varCount);
+         System.out.println("Count of value choice: " + sudoku.valCount);
         
     }
+    
+    public int varCount  = 0;
+    public int valCount  = 0;
 }

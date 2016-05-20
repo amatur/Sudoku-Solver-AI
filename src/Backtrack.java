@@ -27,27 +27,30 @@ public class Backtrack {
         
         Integer varPos = VariableSelection.firstUnassignedCell(new Sudoku(assign));
         System.out.println("selected varpos: "+varPos);
-        
+        s.varCount++;
         VariableCell varCell = s.getCell(varPos);
         //probably wont reach here
         if (varPos == null) return null;
         
         ArrayList<Integer> orderDomainValues = new ArrayList<>();
-        orderDomainValues = ValueSelection.randomOrder(new Sudoku(assign), varPos);
+        orderDomainValues = ValueSelection.firstOrder(new Sudoku(assign), varPos);
+        System.out.println("ORDER DOMAIN VALUES: "+ orderDomainValues);
         for(Integer value: orderDomainValues){
+            System.out.println("selected value: "+value);
+            s.valCount++;
             // Make a new assignment
             Assignment newAssign = new Assignment(assign);
             newAssign.board[varCell.row][varCell.col] = value;
             newAssign.domains[varPos].clear();
             newAssign.domains[varPos].set(value-1);
-            newAssign.printDomains();
-            /*
+            //newAssign.printDomains();
+            
             // Try making some inferences
             try {
                 newAssign = s.inference(newAssign, varPos);
             } catch (IllegalStateException e) {
                 continue;
-            }*/
+            }
 
             Sudoku newAssignSudoku = new Sudoku(newAssign);
             // Check the consistency

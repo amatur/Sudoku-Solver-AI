@@ -61,7 +61,9 @@ public class ValueSelection {
             int valueExamined = domains.get(i);
             for(Integer peerPos: peers){
                 BitSet oneSetBit = new BitSet(Sudoku.N);
-                BitSet peerDomain = s.domains[peerPos];
+                BitSet peerDomain = new BitSet(Sudoku.N);
+                 peerDomain.clear();
+                 peerDomain.or( s.domains[peerPos]);
                 oneSetBit.set(valueExamined-1);
                 peerDomain.and(oneSetBit);
                 
@@ -70,16 +72,17 @@ public class ValueSelection {
                     count++;
                 }
             }
-            domainsCount.add(i, new Integer(count));
+            domainsCount.add(new Integer(count));
             minHeap.add(new CountTuple(valueExamined, count));
         }
        
         ArrayList<Integer> al = new ArrayList<>();
         while(!minHeap.isEmpty()){
-            al.add((Integer)minHeap.peek());
+            al.add(((CountTuple)minHeap.peek()).domainValue);
             minHeap.remove();
         }
-        
+         //System.out.println("DOmains" + domains);
+       //  System.out.println("DOmainsCOUNT" + domainsCount);
         return al;
     }
     
@@ -95,6 +98,7 @@ public class ValueSelection {
             }
         }
         Collections.shuffle(domains, new Random());
+        System.out.println(domains);
         return domains;
     }
     
@@ -109,6 +113,7 @@ public class ValueSelection {
                 break; // or (i+1) would overflow
             }
         }
+         System.out.println("DOmains" + domains);
         return domains;
     }
 }
