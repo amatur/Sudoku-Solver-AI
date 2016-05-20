@@ -1,6 +1,9 @@
 
 
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
+import java.util.Comparator;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -44,6 +47,72 @@ public class Assignment {
                 }
             }
         }
+        return true;
+    }
+    
+    public boolean allDiff(ArrayList<Integer> al) {
+        Collections.sort(al, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+        });
+        int prev = 0;
+        for (int val : al) {
+            if (val == prev) {
+                return false;
+            }
+            prev = val;
+        }
+        return true;
+    }
+    
+    public boolean consistent(){
+        
+        //same col
+        for(int col=0; col<N; col++){
+            ArrayList<Integer> al = new ArrayList<>();
+            for(int i = 0; i<N ; i++){
+                if(board[i][col] != 0){
+                    al.add(board[i][col]);
+                }
+            }
+            if(!allDiff(al)){
+                return false;
+            }    
+	}
+        
+        //same row
+        for(int row=0; row<N; row++){
+            ArrayList<Integer> al = new ArrayList<>();
+            for(int i = 0; i<N ; i++){
+                if(board[row][i] != 0){
+                    al.add(board[row][i]);
+                }
+            }
+            if(!allDiff(al)){
+                return false;
+            }    
+	}
+        
+        int arr[] = {0, 3, 6, 27, 30, 33, 54, 57, 60 };
+        //same box/region
+	for(int pos: arr ){
+                ArrayList<Integer> al = new ArrayList<>();
+		VariableCell startCell = Sudoku.getCell(pos);
+		int startRow = startCell.row; 
+		int startCol = startCell.col; 
+		for(int i=0; i< Sudoku.NROOT; i++){
+                    for(int j=0; j< Sudoku.NROOT; j++){
+                            if(board[startRow+i][startCol+j] != 0){
+                                     al.add(board[startRow+i][startCol+j]);
+                            }
+                    }
+		}
+		if(!allDiff(al)){
+                    return false;
+                }
+	}
         return true;
     }
     

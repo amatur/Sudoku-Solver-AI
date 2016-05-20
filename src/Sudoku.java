@@ -123,6 +123,13 @@ public class Sudoku {
     }
     
     
+    public BitSet copyBitset(BitSet given){
+        BitSet copy = new BitSet(N);
+        copy.clear();
+        copy.or(given);
+        return copy;
+    }
+    
     
     public void eliminateByFC(){
         for(int pos = 0; pos<N*N; pos++){
@@ -132,10 +139,16 @@ public class Sudoku {
             Assignment newAssign = new Assignment(assignment);
             Sudoku newSudoku = new Sudoku(newAssign);
             for(Integer peerPos: peers){
+                BitSet revertBS = copyBitset(newSudoku.domains[peerPos]);
+                
                 newSudoku.domains[peerPos].clear(newSudoku.get(pos)-1);
                 if( newSudoku.domains[peerPos].cardinality()==1){
                     VariableCell vc = getCell(peerPos);
                     newSudoku.board[vc.row][vc.col] = newSudoku.domains[peerPos].nextSetBit(0)+1;
+                     if(!newSudoku.consistent(peerPos)){
+                         newSudoku.domains[peerPos] = revertBS;
+                         newSudoku.board[vc.row][vc.col] = 0;
+                     }
                 }
                 if( newSudoku.domains[peerPos].cardinality()==0){
                     throw new IllegalStateException("No remaining assignments for variable: ");
@@ -188,13 +201,13 @@ public class Sudoku {
 		return true;
 	}
 
-    public VariableCell getCell(int pos) {
+    public static VariableCell getCell(int pos) {
         int r = pos / N;
         int c = pos % N;
         return new VariableCell(r, c);
     }
 
-    public VariableCell getGridStartCell(int pos) {
+    public static VariableCell getGridStartCell(int pos) {
         VariableCell tempCell = getCell(pos);
         int gridRow = tempCell.row / NROOT; //can be 0, 1, 2
         int gridCol = tempCell.col / NROOT; //can be 0, 1, 2
@@ -205,7 +218,7 @@ public class Sudoku {
     public static void main(String[] args) {
         Scanner s = null;
         try {
-            s = new Scanner(new File("easy1.txt"));
+            s = new Scanner(new File("error1.txt"));
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }

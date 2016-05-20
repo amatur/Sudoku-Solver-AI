@@ -54,6 +54,9 @@ public class Backtrack {
 
             Sudoku newAssignSudoku = new Sudoku(newAssign);
             // Check the consistency
+            if (!newAssign.consistent()) {
+                continue;
+            }
             if (!newAssignSudoku.consistent(varPos)) {
                 continue;
             }
