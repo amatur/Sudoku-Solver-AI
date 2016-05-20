@@ -185,13 +185,18 @@ public class Sudoku {
             }
         }
         Sudoku sudoku = new Sudoku(board);
-        Backtrack.startSolve(sudoku);
-        /*
-         AssignmentBoard solution = sudoku.solve();
+       System.out.println("Original Problem: ");
+       sudoku.assignment.print();
+        
+         Assignment solution =  Backtrack.startSolve(sudoku);
          if (solution == null) {
-         System.out.println("Failed to find a solution!");
-         System.exit(1);
-         }*/
-        System.out.println("Solution:");
+            System.out.println("Failed to find a solution!");
+            System.exit(1);
+         }else{
+             System.out.println("Solution:");
+             solution.print();
+             solution.printDomains();
+         }
+        
     }
 }

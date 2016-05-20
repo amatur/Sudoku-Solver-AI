@@ -20,13 +20,14 @@ public class Backtrack {
     /** return assignment or return null for failure */
     public static Assignment backtrack(Assignment assign, Sudoku s){
         if(assign.complete()){
-            assign.print();
-            assign.printDomains();
+            //assign.print();
+            //assign.printDomains();
             return assign;
         }
         
         Integer varPos = VariableSelection.firstUnassignedCell(new Sudoku(assign));
         System.out.println("selected varpos: "+varPos);
+        
         VariableCell varCell = s.getCell(varPos);
         //probably wont reach here
         if (varPos == null) return null;
@@ -39,7 +40,7 @@ public class Backtrack {
             newAssign.board[varCell.row][varCell.col] = value;
             newAssign.domains[varPos].clear();
             newAssign.domains[varPos].set(value-1);
-            
+            newAssign.printDomains();
             /*
             // Try making some inferences
             try {

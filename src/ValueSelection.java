@@ -46,9 +46,12 @@ public class ValueSelection {
         ArrayList<Integer> domains = new ArrayList<>();
         ArrayList<Integer> domainsCount = new ArrayList<>();
         // To iterate over the true bits in a BitSet, use the following loop:
-        for (int i = bs.nextSetBit(0); i < Sudoku.N; i = bs.nextSetBit(i+1)) {
+        for (int i = bs.nextSetBit(0); i >=0; i = bs.nextSetBit(i+1)) {
            // operate on index i here
             domains.add(i+1);
+            if (i == Integer.MAX_VALUE) {
+                break; // or (i+1) would overflow
+            }
         }
         
         HashSet<Integer> peers = s.getPeers(pos);
@@ -84,10 +87,13 @@ public class ValueSelection {
         BitSet bs = s.domains[pos];
         ArrayList<Integer> domains = new ArrayList<>();
         // To iterate over the true bits in a BitSet, use the following loop:
-        //for (int i = bs.nextSetBit(0); i < Sudoku.N; i = bs.nextSetBit(i+1)) {
+        for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i+1)) {
            // /operate on index i here
-           // domains.add(i+1);
-        //}
+            domains.add(i+1);
+            if (i == Integer.MAX_VALUE) {
+                break; // or (i+1) would overflow
+            }
+        }
         Collections.shuffle(domains, new Random());
         return domains;
     }
@@ -96,9 +102,12 @@ public class ValueSelection {
         BitSet bs = s.domains[pos];
         ArrayList<Integer> domains = new ArrayList<>();
         // To iterate over the true bits in a BitSet, use the following loop:
-        for (int i = bs.nextSetBit(0); i < Sudoku.N; i = bs.nextSetBit(i+1)) {
+        for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i+1)) {
            // operate on index i here
             domains.add(i+1);
+            if (i == Integer.MAX_VALUE) {
+                break; // or (i+1) would overflow
+            }
         }
         return domains;
     }
