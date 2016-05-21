@@ -61,9 +61,9 @@ public class ConstraintPropagator {
         triplet( s, pos, s.getColPeers(pos), 3);
         triplet( s, pos, s.getRowPeers(pos), 3);
         triplet( s, pos, s.getBoxPeers(pos), 3);
-        triplet( s, pos, s.getColPeers(pos), 4);
-        triplet( s, pos, s.getRowPeers(pos), 4);
-        triplet( s, pos, s.getBoxPeers(pos), 4);
+//        triplet( s, pos, s.getColPeers(pos), 4);
+//        triplet( s, pos, s.getRowPeers(pos), 4);
+//        triplet( s, pos, s.getBoxPeers(pos), 4);
     }
     public static void triplet(Sudoku s, int pos, ArrayList<Integer> colPeers, int subsetSize) throws IllegalStateException{ 
         //System.err.println(colPeers);
@@ -113,15 +113,14 @@ public class ConstraintPropagator {
                 //System.out.println("}");
                 if((maxCardinality == subsetSize)){
                         if(bs.cardinality()==subsetSize){
-                            System.out.println("triplet found");
-                            System.out.println(bs);
+                            if(Sudoku.debug>0) System.out.println("triplet found");
+                            if(Sudoku.debug>0) System.out.println(bs);
                             
                             for(Integer iii: trip){
-                               System.out.print(iii + " ");
-                               
+                               if(Sudoku.debug>0) System.out.print(iii + " ");
                             }
-                            System.out.println(trip);
-                            s.assignment.printDomains();
+                            if(Sudoku.debug>0) System.out.println(trip);
+                            if(Sudoku.debug>0) s.assignment.printDomains();
                             for(int peerPos:colPeers){
                                 if(trip.contains((Integer)peerPos)) continue;
                                 BitSet bscopy = Sudoku.copyBitset(bs);
@@ -148,8 +147,8 @@ public class ConstraintPropagator {
     
     public static void myMacWithSingletonTwins(Sudoku newSudoku, int pos) throws IllegalStateException  {
 
-        //twins(newSudoku, pos);
-        //singleton(newSudoku, pos);
+        twins(newSudoku, pos);
+        singleton(newSudoku, pos);
         //triplet(newSudoku, pos);
         // Get all the affected constraints
         HashSet<Integer> peers = newSudoku.getPeers(pos);
@@ -277,7 +276,7 @@ public class ConstraintPropagator {
                 for(int peers2: colPeers2){
                     BitSet thisBS = (s.domains[peerPos]);
                     if(thisBS.equals(s.domains[peers2]) && peers2!=peerPos){
-                         System.out.println("YES! found twins");
+                        if(Sudoku.debug>0)  System.out.println("YES! found twins");
                         twinsToRemove.add(thisBS);
                     }
                 }
@@ -303,7 +302,7 @@ public class ConstraintPropagator {
                 for(int peers2: colPeers2){
                     BitSet thisBS = (s.domains[peerPos]);
                     if(thisBS.equals(s.domains[peers2]) && peers2!=peerPos){
-                        System.out.println("YES! found twins");
+                        if(Sudoku.debug>0) System.out.println("YES! found twins");
                         twinsToRemove.add(thisBS);
                     }
                 }
@@ -329,7 +328,7 @@ public class ConstraintPropagator {
                 for(int peers2: colPeers2){
                     BitSet thisBS = (s.domains[peerPos]);
                     if(thisBS.equals(s.domains[peers2]) && peers2!=peerPos){
-                        System.out.println("YES! found twins");
+                        if(Sudoku.debug>0) System.out.println("YES! found twins");
                         twinsToRemove.add(thisBS);
                     }
                 }

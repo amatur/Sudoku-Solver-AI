@@ -2,15 +2,6 @@
 import java.util.ArrayList;
 import java.util.BitSet;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author Tasnim
- */
 public class Backtrack {
 
     public static Assignment startSolve(Sudoku sud) {
@@ -22,24 +13,12 @@ public class Backtrack {
      */
     public static Assignment backtrack(Assignment assign) {
         if (assign.complete()) {
-            assign.print();
-            assign.printDomains();
+            if(Sudoku.debug>0) assign.print();
+            if(Sudoku.debug>0) assign.printDomains();
             return assign;
         }
 
-//        for(int pos = 0; pos<Sudoku.N*Sudoku.N; pos++){
-//            
-//            ConstraintPropagator.twins(new Sudoku(assign), pos);
-//            ConstraintPropagator.singleton(new Sudoku(assign), pos);
-//       
-//       try {
-//              ConstraintPropagator.triplet(new Sudoku(assign), pos);
-//            } catch (IllegalStateException e) {
-//                System.out.println("ILLEGAL INFERENCE------------------------");
-//                continue;
-//            }
-//        
-//        }
+        
         Integer varPos = VariableSelection.MRV(new Sudoku(assign));
         //System.out.println("selected varpos: "+varPos);
         Sudoku.varCount++;
@@ -50,7 +29,7 @@ public class Backtrack {
         }
 
         ArrayList<Integer> orderDomainValues = new ArrayList<>();
-        orderDomainValues = ValueSelection.randomOrder(new Sudoku(assign), varPos);
+        orderDomainValues = ValueSelection.LRV(new Sudoku(assign), varPos);
 
         //System.out.println("ORDER DOMAIN VALUES: "+ orderDomainValues);
         for (Integer value : orderDomainValues) {
@@ -65,32 +44,22 @@ public class Backtrack {
 
             //every time we make a choice of a value for a variable, we infer
             Sudoku newAssignSudoku = new Sudoku(newAssign);
-            // Try making some inferences
-            // constraint propagation
-//            try {
-//                newAssign = newAssignSudoku.inference(newAssign, varPos);
-//            } catch (IllegalStateException e) {
-//                System.out.println("ILLEGAL INFERENCE------------------------");
-//                continue;
-//            }
+            //ConstraintPropagator.twins(newAssignSudoku, varPos);
+            //ConstraintPropagator.singleton(newAssignSudoku, varPos);
 
-        //for(int pos = 0; pos<Sudoku.N*Sudoku.N; pos++){
-            ConstraintPropagator.twins(newAssignSudoku, varPos);
-           // ConstraintPropagator.singleton(newAssignSudoku, varPos);
-
-            try {
-                ConstraintPropagator.triplet(newAssignSudoku, varPos);
-            } catch (IllegalStateException e) {
-                System.out.println("ILLEGAL INFERENCE------------------------");
-                continue;
-            }
+            //try {
+           //     ConstraintPropagator.triplet(newAssignSudoku, varPos);
+           // } catch (IllegalStateException e) {
+            //    if(Sudoku.debug>0) System.out.println("ILLEGAL INFERENCE------------------------");
+           //     continue;
+            //}
 
        // }
             // Try making some inferences
             try {
-                ConstraintPropagator.MAC(newAssignSudoku, varPos);
+                ConstraintPropagator.myMacWithSingletonTwins(newAssignSudoku, varPos);
             } catch (IllegalStateException e) {
-                System.out.println("ILLEGAL INFERENCE------------------------");
+                if(Sudoku.debug>0) System.out.println("ILLEGAL INFERENCE------------------------");
                 continue;
             }
 
@@ -105,12 +74,8 @@ public class Backtrack {
             // Recurse
             newAssign = backtrack(newAssign);
             if (newAssign != null) {
-                //newAssign.print();
-                // newAssign.printDomains();
                 return newAssign;
             }
-
-            //Sudoku.numBacktracking++;
 
         }
         // Failed
