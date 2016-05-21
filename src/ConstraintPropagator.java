@@ -69,7 +69,7 @@ public class ConstraintPropagator {
         triplet( s, pos, s.getColPeers(pos), 3);
         triplet( s, pos, s.getRowPeers(pos), 3);
         triplet( s, pos, s.getBoxPeers(pos), 3);
-       triplet( s, pos, s.getColPeers(pos), 4);
+        triplet( s, pos, s.getColPeers(pos), 4);
         triplet( s, pos, s.getRowPeers(pos), 4);
         triplet( s, pos, s.getBoxPeers(pos), 4);
     }
@@ -138,12 +138,13 @@ public class ConstraintPropagator {
                                 bscopy.andNot(s.domains[peerPos]);
                                 if(!(bscopy.equals(s.domains[peerPos]))){
                                     s.domains[peerPos].andNot(bs);
+                                    
                                     if(s.domains[peerPos].cardinality()==0){
                                         throw new IllegalStateException("No remaining assignments for variable: ");
                                     }
                                     if(s.domains[peerPos].cardinality()==1){
                                         s.board[Sudoku.getRow(pos)][Sudoku.getCol(pos)] = s.domains[peerPos].nextSetBit(0)+1;
-                                        
+                                        triplet(s, peerPos);
                                     }
                                 }
                             }

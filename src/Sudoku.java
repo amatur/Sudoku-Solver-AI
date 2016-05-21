@@ -281,20 +281,20 @@ public class Sudoku {
 //        }
         Scanner s = null;
         try {
-//            s = new Scanner(new File("easy1.txt"));
+          //  s = new Scanner(new File("easy1.txt"));
 //            s = new Scanner(new File("easy2.txt"));
 //            s = new Scanner(new File("medium1.txt"));
 //            s = new Scanner(new File("medium2.txt"));
-//            s = new Scanner(new File("medium3.txt"));
+      //     s = new Scanner(new File("medium3.txt"));
 //            s = new Scanner(new File("medium4.txt"));
 //            s = new Scanner(new File("hard1.txt"));
 //            s = new Scanner(new File("hard2.txt"));
-//            s = new Scanner(new File("worldhard.txt"));
+            s = new Scanner(new File("worldhard.txt"));
 //            s = new Scanner(new File("hard3.txt"));
 //           s = new Scanner(new File("hard4.txt"));
 //            s = new Scanner(new File("hard5.txt"));
 //            s = new Scanner(new File("hard6.txt"));
-            s = new Scanner(new File("p096_sudoku.txt"));
+   //         s = new Scanner(new File("p096_sudoku.txt"));
             
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
@@ -306,10 +306,10 @@ public class Sudoku {
             }
         }
         Sudoku sudoku = new Sudoku(board);
-        //sudoku.eliminateByFC();
+        sudoku.eliminateByFC();
         System.out.println("Original Problem: ");
         sudoku.assignment.print();
-        //sudoku.assignment.printDomains();
+        sudoku.assignment.printDomains();
 
         
         long startTime = System.nanoTime();
@@ -324,12 +324,18 @@ public class Sudoku {
             //solution.printDomains();
         }
         System.out.println("\nReport:");
-        System.out.println("Count of variable choice: \t" + Sudoku.varCount);
-        System.out.println("Count of value choice: \t" + Sudoku.valCount);
-        System.out.println("Count of backtracking: \t" + Sudoku.numBacktracking);
+//        System.out.println("Count of variable choice: \t" + Sudoku.varCount);
+//        System.out.println("Count of value choice: \t" + Sudoku.valCount);
+//        System.out.println("Count of backtracking: \t" + Sudoku.numBacktracking);
+//        long totalTime = endTime - startTime;
+//        double tot = totalTime/1000000;
+//        System.out.println("Time: \t" + tot + " ms" );
+        System.out.println(Sudoku.varCount);
+        System.out.println(Sudoku.valCount);
+        System.out.println(Sudoku.numBacktracking);
         long totalTime = endTime - startTime;
         double tot = totalTime/1000000;
-        System.out.println("Time: \t" + tot + " ms" );
+        System.out.println(tot + " ms" );
 
     }
     
