@@ -44,26 +44,26 @@ public class VariableSelection {
         
         for (int row = 0; row < Sudoku.N; row++){
             for (int col = 0; col < Sudoku.N; col++){
-                int pos = s.getPos(row,col);
+                int pos = Sudoku.getPos(row,col);
                 HashSet<Integer> unassignedNeighbours = new HashSet<>();
                 if (s.board[row][col] == 0){
                    
                     //look for unassigned neighbours in same column
                     for(int i = 0; i<Sudoku.N ; i++){
 			if(s.board[i][col] == 0 && i != row ){
-                            unassignedNeighbours.add(s.getPos(i, col));
+                            unassignedNeighbours.add(Sudoku.getPos(i, col));
 			}
                     }
                     
                     //look for unassigned neighbours in same row
                     for (int j = 0; j < Sudoku.N; j++) {
                         if (s.board[row][j] == 0 && j != col) {
-                            unassignedNeighbours.add(s.getPos(row, j));
+                            unassignedNeighbours.add(Sudoku.getPos(row, j));
                         }
                     }
 
                     //look for unassigned neighbours in same box
-                    VariableCell startCell = s.getGridStartCell(pos);
+                    VariableCell startCell = Sudoku.getGridStartCell(pos);
                     int startRow = startCell.row;
                     int startCol = startCell.col;
                     for (int i = 0; i < Sudoku.NROOT; i++) {
@@ -97,7 +97,7 @@ public class VariableSelection {
         for (int i = 0; i < Sudoku.N; i++){
             for (int j = 0; j < Sudoku.N; j++)
                 if (s.board[i][j] == 0){
-                    unassigned.add(s.getPos(i, j));
+                    unassigned.add(Sudoku.getPos(i, j));
                 }
         }
         if(unassigned.size()>0){

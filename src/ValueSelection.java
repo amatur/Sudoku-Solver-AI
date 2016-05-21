@@ -99,7 +99,7 @@ public class ValueSelection {
             }
         }
         Collections.shuffle(domains, new Random());
-        System.out.println(domains);
+        //System.out.println(domains);
         return domains;
     }
     
@@ -114,7 +114,7 @@ public class ValueSelection {
                 break; // or (i+1) would overflow
             }
         }
-         System.out.println("DOmains" + domains);
+         //System.out.println("DOmains" + domains);
         return domains;
     }
 }

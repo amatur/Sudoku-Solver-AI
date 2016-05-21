@@ -14,45 +14,59 @@ import java.util.BitSet;
  */
 public class Backtrack {
     public static Assignment startSolve(Sudoku sud){
-        return backtrack(sud.assignment, sud);
+        return backtrack(sud.assignment);
     }
     
     /** return assignment or return null for failure */
-    public static Assignment backtrack(Assignment assign, Sudoku s){
+    public static Assignment backtrack(Assignment assign){
         if(assign.complete()){
-            //assign.print();
-            //assign.printDomains();
+            assign.print();
+            assign.printDomains();
             return assign;
         }
         
         Integer varPos = VariableSelection.firstUnassignedCell(new Sudoku(assign));
-        System.out.println("selected varpos: "+varPos);
-        s.varCount++;
-        VariableCell varCell = s.getCell(varPos);
+        //System.out.println("selected varpos: "+varPos);
+        Sudoku.varCount++;
+        VariableCell varCell = Sudoku.getCell(varPos);
         //probably wont reach here
         if (varPos == null) return null;
         
         ArrayList<Integer> orderDomainValues = new ArrayList<>();
         orderDomainValues = ValueSelection.LRV(new Sudoku(assign), varPos);
-        System.out.println("ORDER DOMAIN VALUES: "+ orderDomainValues);
+        
+        //System.out.println("ORDER DOMAIN VALUES: "+ orderDomainValues);
         for(Integer value: orderDomainValues){
-            System.out.println("selected value: "+value);
-            s.valCount++;
-            // Make a new assignment
+            //System.out.println("selected value: "+value);
+            Sudoku.valCount++;
+            // Make a new assignment (makes copy)
             Assignment newAssign = new Assignment(assign);
             newAssign.board[varCell.row][varCell.col] = value;
             newAssign.domains[varPos].clear();
             newAssign.domains[varPos].set(value-1);
             //newAssign.printDomains();
             
+            
+            
+            //every time we make a choice of a value for a variable, we infer
+             Sudoku newAssignSudoku = new Sudoku(newAssign);
+            // Try making some inferences
+             // constraint propagation
+//            try {
+//                newAssign = newAssignSudoku.inference(newAssign, varPos);
+//            } catch (IllegalStateException e) {
+//                System.out.println("ILLEGAL INFERENCE------------------------");
+//                continue;
+//            }
+
             // Try making some inferences
             try {
-                newAssign = s.inference(newAssign, varPos);
+                ConstraintPropagator.myMacWithSingletonTwins(newAssignSudoku, varPos);
             } catch (IllegalStateException e) {
+                System.out.println("ILLEGAL INFERENCE------------------------");
                 continue;
             }
-
-            Sudoku newAssignSudoku = new Sudoku(newAssign);
+           
             // Check the consistency
             if (!newAssign.consistent()) {
                 continue;
@@ -62,12 +76,16 @@ public class Backtrack {
             }
 
             // Recurse
-            newAssign = backtrack(newAssign, s);
+            newAssign = backtrack(newAssign);
             if (newAssign != null) {
-                newAssign.print();
-                newAssign.printDomains();
+                //newAssign.print();
+               // newAssign.printDomains();
                 return newAssign;
             }
+            
+            Sudoku.numBacktracking++;
+            
+
         }
         // Failed
         return null;

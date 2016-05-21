@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.*;
 
 public class Sudoku {
@@ -30,8 +31,7 @@ public class Sudoku {
             }
         }
         assignment = new Assignment(board, domains);
-        assignment.print();
-        assignment.printDomains();
+
     }
 
     /** give an assignment the Sudoku wrapper**/
@@ -143,9 +143,10 @@ public class Sudoku {
 
     public Assignment inference(Assignment oldAssign, int pos) throws IllegalStateException {
         // Get all the affected constraints
-        HashSet<Integer> peers = getPeers(pos);
+        
         Assignment newAssign = new Assignment(oldAssign);
         Sudoku newSudoku = new Sudoku(newAssign);
+        HashSet<Integer> peers = newSudoku.getPeers(pos);
         for (Integer peerPos : peers) {
             newSudoku.domains[peerPos].clear(newSudoku.get(pos) - 1);
             if (newSudoku.domains[peerPos].cardinality() == 1) {
@@ -271,6 +272,13 @@ public class Sudoku {
     }
 
     public static void main(String[] args) {
+        
+        //redirecting output file
+//        try {
+//            System.setOut(new PrintStream(new File("output-file.txt")));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         Scanner s = null;
         try {
 //            s = new Scanner(new File("easy1.txt"));
@@ -280,11 +288,13 @@ public class Sudoku {
 //            s = new Scanner(new File("medium3.txt"));
 //            s = new Scanner(new File("medium4.txt"));
 //            s = new Scanner(new File("hard1.txt"));
-            s = new Scanner(new File("hard2.txt"));
+//            s = new Scanner(new File("hard2.txt"));
+//            s = new Scanner(new File("worldhard.txt"));
 //            s = new Scanner(new File("hard3.txt"));
 //           s = new Scanner(new File("hard4.txt"));
 //            s = new Scanner(new File("hard5.txt"));
 //            s = new Scanner(new File("hard6.txt"));
+            s = new Scanner(new File("p096_sudoku.txt"));
             
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
@@ -299,22 +309,31 @@ public class Sudoku {
         //sudoku.eliminateByFC();
         System.out.println("Original Problem: ");
         sudoku.assignment.print();
-        sudoku.assignment.printDomains();
+        //sudoku.assignment.printDomains();
 
+        
+        long startTime = System.nanoTime();
         Assignment solution = Backtrack.startSolve(sudoku);
+        long endTime   = System.nanoTime();
+
         if (solution == null) {
             System.out.println("Failed to find a solution!");
         } else {
             System.out.println("Solution:");
             solution.print();
-            solution.printDomains();
+            //solution.printDomains();
         }
         System.out.println("\nReport:");
-        System.out.println("Count of variable choice: " + sudoku.varCount);
-        System.out.println("Count of value choice: " + sudoku.valCount);
+        System.out.println("Count of variable choice: \t" + Sudoku.varCount);
+        System.out.println("Count of value choice: \t" + Sudoku.valCount);
+        System.out.println("Count of backtracking: \t" + Sudoku.numBacktracking);
+        long totalTime = endTime - startTime;
+        double tot = totalTime/1000000;
+        System.out.println("Time: \t" + tot + " ms" );
 
     }
-
-    public int varCount = 0;
-    public int valCount = 0;
+    
+    public static int varCount = 0;
+    public static int valCount = 0;
+    public static int numBacktracking = 0;
 }
