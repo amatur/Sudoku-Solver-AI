@@ -65,11 +65,78 @@ public class ConstraintPropagator {
     }
     
     
+    public static void triplet(Sudoku s, int pos){
+        triplet( s, pos, s.getColPeers(pos));
+        triplet( s, pos, s.getRowPeers(pos));
+        triplet( s, pos, s.getBoxPeers(pos));
+    }
+    public static void triplet(Sudoku s, int pos, ArrayList<Integer> colPeers){ 
+        
+        int N = colPeers.size(); // the number of elements in the set:
+        if(N<3) return;
+        int subsetSize = 3; //the number of elements in the subsets:
+        int[] binary = new int[(int) Math.pow(2, N)];
+        for (int i = 0; i < Math.pow(2, N); i++) 
+        {
+            int b = 1;
+            binary[i] = 0;
+            int num = i, count = 0;
+            while (num > 0) 
+            {
+                if (num % 2 == 1)
+                    count++;
+                binary[i] += (num % 2) * b;
+                num /= 2;
+                b = b * 10;
+            }
+            if (count == subsetSize) 
+            {
+                
+                //System.out.print("{ ");
+                ArrayList<Integer> triplets = new ArrayList<>();
+                    BitSet bs = new BitSet(9);
+                    bs.clear();
+                    int maxCardinality = 0;
+                for (int j = 0; j < N; j++) 
+                {
+                    
+                    
+                    if (binary[i] % 10 == 1){
+                        //System.out.print(j + " ");//try out
+                        
+                        if(s.domains[colPeers.get(j)-1].cardinality() > maxCardinality){
+                            maxCardinality = s.domains[colPeers.get(j)-1].cardinality();
+                            bs.or(s.domains[colPeers.get(j)-1]);
+                        }
+                        
+                    }
+                    if((maxCardinality == 3)){
+                        if(bs.cardinality()==3){
+                            System.out.println("triplet found");
+                            for(int peerPos:colPeers){
+                                BitSet bscopy = Sudoku.copyBitset(bs);
+                                bscopy.andNot(s.domains[peerPos]);
+                                if(!(bscopy.equals(s.domains[peerPos]))){
+                                    s.domains[peerPos].andNot(bs);
+                                }
+                            }
+                        }
+                    }
+                        
+                    binary[i] /= 10;
+                }
+                //System.out.println("}");
+            }
+        }
+    }
+    
+    
     
     public static void myMacWithSingletonTwins(Sudoku newSudoku, int pos) throws IllegalStateException  {
 
-        twins(newSudoku, pos);
-        singleton(newSudoku, pos);
+        //twins(newSudoku, pos);
+        //singleton(newSudoku, pos);
+        //triplet(newSudoku, pos);
         // Get all the affected constraints
         HashSet<Integer> peers = newSudoku.getPeers(pos);
         //removing from peers domain the assigned value

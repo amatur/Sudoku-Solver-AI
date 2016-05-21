@@ -25,7 +25,14 @@ public class Backtrack {
             return assign;
         }
         
-        Integer varPos = VariableSelection.firstUnassignedCell(new Sudoku(assign));
+        for(int pos = 0; pos<Sudoku.N*Sudoku.N; pos++){
+            
+        ConstraintPropagator.twins(new Sudoku(assign), pos);
+       ConstraintPropagator.singleton(new Sudoku(assign), pos);
+        ConstraintPropagator.triplet(new Sudoku(assign), pos);
+        }
+        
+        Integer varPos = VariableSelection.MRV(new Sudoku(assign));
         //System.out.println("selected varpos: "+varPos);
         Sudoku.varCount++;
         VariableCell varCell = Sudoku.getCell(varPos);
@@ -58,6 +65,10 @@ public class Backtrack {
 //                System.out.println("ILLEGAL INFERENCE------------------------");
 //                continue;
 //            }
+             
+             
+             
+             
 
             // Try making some inferences
             try {
