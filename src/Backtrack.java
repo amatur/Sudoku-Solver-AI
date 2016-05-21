@@ -27,9 +27,16 @@ public class Backtrack {
         
         for(int pos = 0; pos<Sudoku.N*Sudoku.N; pos++){
             
-        ConstraintPropagator.twins(new Sudoku(assign), pos);
-       ConstraintPropagator.singleton(new Sudoku(assign), pos);
-        ConstraintPropagator.triplet(new Sudoku(assign), pos);
+            ConstraintPropagator.twins(new Sudoku(assign), pos);
+            ConstraintPropagator.singleton(new Sudoku(assign), pos);
+       
+       try {
+              ConstraintPropagator.triplet(new Sudoku(assign), pos);
+            } catch (IllegalStateException e) {
+                System.out.println("ILLEGAL INFERENCE------------------------");
+                continue;
+            }
+        
         }
         
         Integer varPos = VariableSelection.MRV(new Sudoku(assign));
@@ -69,6 +76,19 @@ public class Backtrack {
              
              
              
+        for(int pos = 0; pos<Sudoku.N*Sudoku.N; pos++){
+            
+            ConstraintPropagator.twins(new Sudoku(assign), pos);
+            ConstraintPropagator.singleton(new Sudoku(assign), pos);
+       
+       try {
+              ConstraintPropagator.triplet(new Sudoku(assign), pos);
+            } catch (IllegalStateException e) {
+                System.out.println("ILLEGAL INFERENCE------------------------");
+                continue;
+            }
+        
+        }
 
             // Try making some inferences
             try {

@@ -65,16 +65,21 @@ public class ConstraintPropagator {
     }
     
     
-    public static void triplet(Sudoku s, int pos){
-        triplet( s, pos, s.getColPeers(pos));
-        triplet( s, pos, s.getRowPeers(pos));
-        triplet( s, pos, s.getBoxPeers(pos));
+    public static void triplet(Sudoku s, int pos) throws IllegalStateException{
+        triplet( s, pos, s.getColPeers(pos), 3);
+        triplet( s, pos, s.getRowPeers(pos), 3);
+        triplet( s, pos, s.getBoxPeers(pos), 3);
+       triplet( s, pos, s.getColPeers(pos), 4);
+        triplet( s, pos, s.getRowPeers(pos), 4);
+        triplet( s, pos, s.getBoxPeers(pos), 4);
     }
-    public static void triplet(Sudoku s, int pos, ArrayList<Integer> colPeers){ 
-        
+    public static void triplet(Sudoku s, int pos, ArrayList<Integer> colPeers, int subsetSize) throws IllegalStateException{ 
+        //System.err.println(colPeers);
+        Object[] colPeersA =  (colPeers.toArray());
         int N = colPeers.size(); // the number of elements in the set:
-        if(N<3) return;
-        int subsetSize = 3; //the number of elements in the subsets:
+       //  int subsetSize = 3; //the number of elements in the subsets:
+        if(N<subsetSize) return;
+       
         int[] binary = new int[(int) Math.pow(2, N)];
         for (int i = 0; i < Math.pow(2, N); i++) 
         {
@@ -91,9 +96,8 @@ public class ConstraintPropagator {
             }
             if (count == subsetSize) 
             {
-                
+                ArrayList<Integer> trip = new ArrayList<>();
                 //System.out.print("{ ");
-                ArrayList<Integer> triplets = new ArrayList<>();
                     BitSet bs = new BitSet(9);
                     bs.clear();
                     int maxCardinality = 0;
@@ -102,30 +106,49 @@ public class ConstraintPropagator {
                     
                     
                     if (binary[i] % 10 == 1){
-                        //System.out.print(j + " ");//try out
-                        
-                        if(s.domains[colPeers.get(j)-1].cardinality() > maxCardinality){
-                            maxCardinality = s.domains[colPeers.get(j)-1].cardinality();
-                            bs.or(s.domains[colPeers.get(j)-1]);
+                       
+                      //  System.out.print((Integer)(colPeers.get(j)));//try out
+                        trip.add(colPeers.get(j));
+                        if(s.domains[colPeers.get(j)].cardinality() > maxCardinality){
+                            maxCardinality = s.domains[colPeers.get(j)].cardinality();
+                            
                         }
+                        bs.or(s.domains[colPeers.get(j)]);
                         
                     }
-                    if((maxCardinality == 3)){
-                        if(bs.cardinality()==3){
-                            System.out.println("triplet found");
-                            for(int peerPos:colPeers){
-                                BitSet bscopy = Sudoku.copyBitset(bs);
-                                bscopy.andNot(s.domains[peerPos]);
-                                if(!(bscopy.equals(s.domains[peerPos]))){
-                                    s.domains[peerPos].andNot(bs);
-                                }
-                            }
-                        }
-                    }
+                    
                         
                     binary[i] /= 10;
                 }
                 //System.out.println("}");
+                if((maxCardinality == subsetSize)){
+                        if(bs.cardinality()==subsetSize){
+                            System.out.println("triplet found");
+                            System.out.println(bs);
+                            
+                            for(Integer iii: trip){
+                               System.out.print(iii + " ");
+                               
+                            }
+                            System.out.println(trip);
+                            s.assignment.printDomains();
+                            for(int peerPos:colPeers){
+                                if(trip.contains((Integer)peerPos)) continue;
+                                BitSet bscopy = Sudoku.copyBitset(bs);
+                                bscopy.andNot(s.domains[peerPos]);
+                                if(!(bscopy.equals(s.domains[peerPos]))){
+                                    s.domains[peerPos].andNot(bs);
+                                    if(s.domains[peerPos].cardinality()==0){
+                                        throw new IllegalStateException("No remaining assignments for variable: ");
+                                    }
+                                    if(s.domains[peerPos].cardinality()==1){
+                                        s.board[Sudoku.getRow(pos)][Sudoku.getCol(pos)] = s.domains[peerPos].nextSetBit(0)+1;
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    }
             }
         }
     }
