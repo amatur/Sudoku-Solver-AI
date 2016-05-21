@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashSet;
@@ -14,9 +13,8 @@ import java.util.HashSet;
  * @author tasnim
  */
 public class ConstraintPropagator {
-    
+   
     public static void forwardCheckElimination(Sudoku newSudoku, int pos) throws IllegalStateException  {
-
         // Get all the affected constraints
         HashSet<Integer> peers = newSudoku.getPeers(pos);
         //removing from peers domain the assigned value
@@ -38,11 +36,7 @@ public class ConstraintPropagator {
         
     }
     
-    
-    
-    
     public static void MAC(Sudoku newSudoku, int pos) throws IllegalStateException  {
-
         // Get all the affected constraints
         HashSet<Integer> peers = newSudoku.getPeers(pos);
         //removing from peers domain the assigned value
@@ -60,11 +54,9 @@ public class ConstraintPropagator {
             if (newSudoku.domains[peerPos].cardinality() == 0) {
                 throw new IllegalStateException("No remaining assignments for variable: ");
             }
-        }
-        
+        }        
     }
-    
-    
+        
     public static void triplet(Sudoku s, int pos) throws IllegalStateException{
         triplet( s, pos, s.getColPeers(pos), 3);
         triplet( s, pos, s.getRowPeers(pos), 3);
@@ -115,9 +107,7 @@ public class ConstraintPropagator {
                         }
                         bs.or(s.domains[colPeers.get(j)]);
                         
-                    }
-                    
-                        
+                    }                        
                     binary[i] /= 10;
                 }
                 //System.out.println("}");
@@ -336,7 +326,7 @@ public class ConstraintPropagator {
         twinsToRemove = new HashSet<>();
         for(int peerPos: colPeers){
             if( s.domains[peerPos].cardinality() == 2 ){
-                for(int peers2: colPeers){
+                for(int peers2: colPeers2){
                     BitSet thisBS = (s.domains[peerPos]);
                     if(thisBS.equals(s.domains[peers2]) && peers2!=peerPos){
                         System.out.println("YES! found twins");

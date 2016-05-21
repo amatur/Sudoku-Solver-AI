@@ -196,7 +196,7 @@ public class Sudoku {
         return copy;
     }
 
-    public void eliminateByFC() throws IllegalStateException  {
+    public void corrector() throws IllegalStateException  {
         for (int pos = 0; pos < N * N; pos++) {
             if (get(pos) != 0) {
                 // Get all the affected constraints
@@ -289,8 +289,8 @@ public class Sudoku {
 //            s = new Scanner(new File("medium4.txt"));
 //            s = new Scanner(new File("hard1.txt"));
 //            s = new Scanner(new File("hard2.txt"));
-            s = new Scanner(new File("worldhard.txt"));
-//            s = new Scanner(new File("hard3.txt"));
+    //        s = new Scanner(new File("worldhard.txt"));
+          s = new Scanner(new File("hard3.txt"));
 //           s = new Scanner(new File("hard4.txt"));
 //            s = new Scanner(new File("hard5.txt"));
 //            s = new Scanner(new File("hard6.txt"));
@@ -306,7 +306,7 @@ public class Sudoku {
             }
         }
         Sudoku sudoku = new Sudoku(board);
-        sudoku.eliminateByFC();
+        sudoku.corrector();
         System.out.println("Original Problem: ");
         sudoku.assignment.print();
         sudoku.assignment.printDomains();
@@ -335,7 +335,7 @@ public class Sudoku {
         System.out.println(Sudoku.numBacktracking);
         long totalTime = endTime - startTime;
         double tot = totalTime/1000000;
-        System.out.println(tot + " ms" );
+        System.out.println(tot);
 
     }
     

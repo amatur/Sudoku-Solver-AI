@@ -50,7 +50,7 @@ public class Backtrack {
         }
 
         ArrayList<Integer> orderDomainValues = new ArrayList<>();
-        orderDomainValues = ValueSelection.LRV(new Sudoku(assign), varPos);
+        orderDomainValues = ValueSelection.randomOrder(new Sudoku(assign), varPos);
 
         //System.out.println("ORDER DOMAIN VALUES: "+ orderDomainValues);
         for (Integer value : orderDomainValues) {
@@ -110,7 +110,7 @@ public class Backtrack {
                 return newAssign;
             }
 
-            Sudoku.numBacktracking++;
+            //Sudoku.numBacktracking++;
 
         }
         // Failed
