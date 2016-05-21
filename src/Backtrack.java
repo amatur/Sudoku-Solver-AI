@@ -33,7 +33,7 @@ public class Backtrack {
         if (varPos == null) return null;
         
         ArrayList<Integer> orderDomainValues = new ArrayList<>();
-        orderDomainValues = ValueSelection.firstOrder(new Sudoku(assign), varPos);
+        orderDomainValues = ValueSelection.LRV(new Sudoku(assign), varPos);
         System.out.println("ORDER DOMAIN VALUES: "+ orderDomainValues);
         for(Integer value: orderDomainValues){
             System.out.println("selected value: "+value);

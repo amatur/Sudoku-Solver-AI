@@ -40,6 +40,7 @@ public class ValueSelection {
     for example, if in our cell we have the possibilities 7 and 9, we check in how many of this cell's peers 7 appears in the domain, 
     and we do the same for 9; the algorithm then chooses the number that least appears in the cell's peers' domain.
     */
+    /*LCV => least constraining value*/
     public static ArrayList<Integer> LRV(Sudoku s, int pos){
         PriorityQueue minHeap = new PriorityQueue(10, new MyComparator());
         BitSet bs = s.domains[pos];
