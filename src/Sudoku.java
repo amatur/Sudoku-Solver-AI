@@ -1,9 +1,6 @@
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Sudoku {
 
@@ -55,6 +52,10 @@ public class Sudoku {
     public static int getPos(VariableCell c) {
         return c.row * N + c.col;
     }
+    
+    
+    
+    
     
     public HashSet<Integer> getPeers(int pos) {
         VariableCell c = getCell(pos);
@@ -218,7 +219,7 @@ public class Sudoku {
     public static void main(String[] args) {
         Scanner s = null;
         try {
-            s = new Scanner(new File("error1.txt"));
+            s = new Scanner(new File("easy1.txt"));
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -229,7 +230,7 @@ public class Sudoku {
             }
         }
         Sudoku sudoku = new Sudoku(board);
-       sudoku.eliminateByFC();
+      // sudoku.eliminateByFC();
        System.out.println("Original Problem: ");
        sudoku.assignment.print();
         sudoku.assignment.printDomains();
