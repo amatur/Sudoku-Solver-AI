@@ -6,7 +6,7 @@ import java.util.*;
 public class Sudoku {
 
     public static int N = 9;
-    public static int NROOT = 3;
+    public static int NROOT = (int)Math.sqrt(N);
     public static int debug = 0;
     
     public BitSet[] domains = new BitSet[N * N];
@@ -284,12 +284,13 @@ public class Sudoku {
 //          s = new Scanner(new File("hard1.txt"));
 //           s = new Scanner(new File("hard2.txt"));
   
-          s = new Scanner(new File("hard3.txt"));
-//        s = new Scanner(new File("hard4.txt"));
+  //        s = new Scanner(new File("hard3.txt"));
+      // s = new Scanner(new File("hard4.txt"));
      //    s = new Scanner(new File("hard5.txt"));
        //    s = new Scanner(new File("hard6.txt"));
        //    s = new Scanner(new File("p096_sudoku.txt"));
-           //    s = new Scanner(new File("worldhard.txt"));
+         //    s = new Scanner(new File("worldhard.txt"));
+             s = new Scanner(new File("problem.txt"));
             
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
@@ -301,7 +302,7 @@ public class Sudoku {
             }
         }
         Sudoku sudoku = new Sudoku(board);
-        sudoku.corrector();
+        //sudoku.corrector();
         System.out.println("Original Problem: ");
         sudoku.assignment.print();
         //sudoku.assignment.printDomains();
@@ -318,12 +319,12 @@ public class Sudoku {
             solution.print();
             //solution.printDomains();
         }
-//        System.out.println("\nReport:");
-//        System.out.println("Count of variable choice: \t" + Sudoku.varCount);
-//        System.out.println("Count of value choice: \t" + Sudoku.valCount);
-//        long totalTime = endTime - startTime;
-//        double tot = totalTime/1000000;
-//        System.out.println("Time: \t" + tot + " ms" );
+        System.out.println("\nReport:");
+        System.out.println("Count of variable choice: \t" + Sudoku.varCount);
+        System.out.println("Count of value choice: \t" + Sudoku.valCount);
+        long totalTime = endTime - startTime;
+        double tot = totalTime/1000000;
+        System.out.println("Time: \t" + tot + " ms" );
 //        System.out.println(Sudoku.varCount);
 //        System.out.println(Sudoku.valCount);
 //        long totalTime = endTime - startTime;

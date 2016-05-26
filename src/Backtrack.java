@@ -57,16 +57,16 @@ public class Backtrack {
        // }
             // Try making some inferences
             try {
-                ConstraintPropagator.myMacWithSingletonTwins(newAssignSudoku, varPos);
+                ConstraintPropagator.forwardCheckElimination(newAssignSudoku, varPos);
             } catch (IllegalStateException e) {
                 if(Sudoku.debug>0) System.out.println("ILLEGAL INFERENCE------------------------");
                 continue;
             }
 
             // Check the consistency
-            if (!newAssign.consistent()) {
-                continue;
-            }
+//            if (!newAssign.consistent()) {
+//                continue;
+//            }
             if (!newAssignSudoku.consistent(varPos)) {
                 continue;
             }

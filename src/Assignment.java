@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,6 +18,7 @@ import java.util.Comparator;
  */
 public class Assignment {
     int N = Sudoku.N;
+     static HashSet<Integer> arr = null;
     public BitSet[] domains = new BitSet[N * N];
     public int[][] board = new int[N][N];
 
@@ -94,8 +96,18 @@ public class Assignment {
                 return false;
             }    
 	}
-        
-        int arr[] = {0, 3, 6, 27, 30, 33, 54, 57, 60 };
+   
+        if (arr == null) {
+            arr = new HashSet<>();
+            for (int pos = 0; pos < Sudoku.N * Sudoku.N; pos++) {
+                VariableCell tempCell = Sudoku.getCell(pos);
+                int gridRow = tempCell.row / Sudoku.NROOT; //can be 0, 1, 2
+                int gridCol = tempCell.col / Sudoku.NROOT; //can be 0, 1, 2
+                arr.add(Sudoku.NROOT * Sudoku.N * gridRow + gridCol * Sudoku.NROOT); //0, 3, 6, 27, 30, 33
+            }
+        }
+
+       // int arr[] = {0, 3, 6, 27, 30, 33, 54, 57, 60 };
         //same box/region
 	for(int pos: arr ){
                 ArrayList<Integer> al = new ArrayList<>();
@@ -122,16 +134,20 @@ public class Assignment {
             for (int j = 0; j < N; j++) {
                 
                 if (board[i][j] == 0) {
-                    System.out.printf("%c ",'.');
+                    System.out.printf("%3c ",'.');
                 }else{
-                    System.out.printf("%d ",board[i][j]);
+                    System.out.printf("%3d ",board[i][j]);
                 }
-                if(j%3==2){
-                    System.out.printf("| ");
+                if(j%Sudoku.NROOT==Sudoku.NROOT-1){
+                    System.out.printf("%3s ", "| ");
                 }
             }
-            if(i%3==2){
-                     System.out.printf("\n------+-------+-------+");
+            if(i%Sudoku.NROOT==Sudoku.NROOT-1){
+                    System.out.println("");
+                    for(int dash = 0; dash<Sudoku.N+(Sudoku.NROOT); dash++){
+                        System.out.printf("%3s ", "- ");
+                    }
+                     //System.out.printf("\n------+-------+-------+");
                 }
            System.out.printf("\n");
         }
